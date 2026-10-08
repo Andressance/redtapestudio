@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Red Tape Studios | Independent Game Development</title>
     <style>
-        /* Importamos fuentes: una clásica para títulos (Playfair) y una limpia para lectura (Inter) */
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap');
 
         :root {
-            /* Colores extraídos directamente del logo */
-            --bg-color: #F4F0E6; /* Fondo pergamino/crema */
-            --card-bg: rgba(255, 255, 255, 0.65); /* Tarjetas translúcidas sobre el vídeo */
-            --accent: #BE3127; /* Rojo "Red Tape" */
-            --text-main: #2A2A2A; /* Tinta oscura institucional */
-            --text-muted: #5C5A55; /* Texto secundario grisáceo */
+            --bg-color: #F4F0E6;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --accent: #BE3127;
+            --text-main: #2A2A2A;
+            --text-muted: #5C5A55;
             
             --font-heading: 'Playfair Display', Georgia, serif;
             --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -32,10 +30,10 @@
             font-family: var(--font-main);
             line-height: 1.6;
             overflow-x: hidden;
-            height: 500vh;
+            /* Aumentamos la altura de la página para que dé tiempo a leer todo haciendo scroll */
+            height: 900vh;
         }
 
-        /* Video Background Pinned */
         #video-container {
             position: fixed;
             top: 0;
@@ -50,7 +48,6 @@
             overflow: hidden;
         }
 
-        /* Capa superpuesta al vídeo para darle tono crema y asegurar que el texto oscuro se lea bien */
         #video-container::after {
             content: '';
             position: absolute;
@@ -63,11 +60,10 @@
             width: 100vw;
             height: 100vh;
             object-fit: cover;
-            opacity: 0.7;
+            opacity: 0.6;
             transition: opacity 0.5s ease;
         }
 
-        /* Content Overlay */
         #content-layer {
             position: relative;
             z-index: 10;
@@ -90,25 +86,20 @@
         }
 
         .logo-img {
-            height: 120px; /* Tamaño más grande para lucir el logo de la campana */
+            height: 100px;
             width: auto;
             object-fit: contain;
             filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
             transition: transform 0.3s ease;
         }
-        
-        .logo-img:hover {
-            transform: scale(1.03);
-        }
 
-        /* Sections */
         .scroll-section {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 0 5%;
+            padding: 4rem 5%;
             text-align: center;
             opacity: 0;
             transform: translateY(40px);
@@ -128,15 +119,20 @@
             margin-bottom: 1.5rem;
             line-height: 1.1;
             color: var(--text-main);
-            text-shadow: 0 4px 20px rgba(255,255,255,0.8);
         }
 
-        .hero p {
+        .hero p, .section-desc {
             font-size: clamp(1.1rem, 2vw, 1.3rem);
             color: var(--text-muted);
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
-            font-weight: 400;
+        }
+
+        h2.section-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
         }
 
         .badge {
@@ -153,25 +149,6 @@
             border: 1px solid rgba(190, 49, 39, 0.3);
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(190, 49, 39, 0.05);
-        }
-
-        .badge::before {
-            content: '';
-            display: block;
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(190, 49, 39, 0.5); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(190, 49, 39, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(190, 49, 39, 0); }
         }
 
         .grid {
@@ -180,7 +157,7 @@
             gap: 2rem;
             max-width: 1200px;
             width: 100%;
-            margin-top: 2rem;
+            margin-top: 3rem;
         }
 
         .card {
@@ -189,24 +166,31 @@
             border-radius: 1rem;
             border: 1px solid rgba(190, 49, 39, 0.15);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
             text-align: left;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 0 20px rgba(190, 49, 39, 0.08);
+        .card-status {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: inline-block;
         }
+
+        .status-dev { color: #BE3127; }
+        .status-plan { color: #d97706; }
+        .status-tech { color: #0284c7; }
 
         .card h3 {
             font-family: var(--font-heading);
             margin-bottom: 1rem;
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-main);
         }
 
         .card p {
@@ -215,135 +199,95 @@
             line-height: 1.7;
         }
 
-        .icon-container {
-            width: 50px;
-            height: 50px;
-            background: rgba(190, 49, 39, 0.05);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(190, 49, 39, 0.2);
-            color: var(--accent);
-        }
-
-        .scroll-indicator {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            z-index: 100;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .scroll-line {
-            width: 2px;
-            height: 40px;
-            background: rgba(42, 42, 42, 0.1);
-            position: relative;
-            overflow: hidden;
-            border-radius: 2px;
-        }
-
-        .scroll-line::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 50%;
-            background: var(--accent);
-            animation: scrollDown 2s infinite ease-in-out;
-        }
-
-        @keyframes scrollDown {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(200%); }
-        }
+        .spacer { height: 70vh; }
 
         footer {
             text-align: center;
             padding: 3rem 2rem;
             color: var(--text-muted);
-            font-size: 0.875rem;
-            position: relative;
-            z-index: 10;
             background: linear-gradient(to top, rgba(244,240,230,1) 0%, rgba(244,240,230,0) 100%);
         }
-
     </style>
 </head>
 <body>
 
-    <!-- Scroll-tied Video Background -->
     <div id="video-container">
-        <!-- Using preload="auto" and muted to ensure smooth programmatic playback -->
         <video id="scroll-video" src="tu-video.mp4" muted playsinline preload="auto"></video>
     </div>
 
     <header>
-        <!-- ASEGÚRATE DE QUE LA IMAGEN SE LLAME ASÍ O CAMBIA EL NOMBRE AQUÍ -->
         <img src="redtape-logo.png" alt="Red Tape Studios" class="logo-img">
     </header>
 
-    <div class="scroll-indicator" id="scroll-indicator">
-        <span>Scroll to Explore</span>
-        <div class="scroll-line"></div>
-    </div>
-
-    <!-- Scrollable Content Layer -->
     <div id="content-layer">
         
-        <!-- Section 1 -->
+        <!-- Hero -->
         <section class="scroll-section hero visible">
-            <div class="badge">Próximamente en 2027</div>
-            <h1>Sistemas complejos.<br>Sátira interactiva.</h1>
-            <p>Estudio de desarrollo de videojuegos independientes especializado en simuladores de gestión, arquitectura de sistemas y experiencias narrativas sistémicas.</p>
+            <div class="badge">Independent Studio</div>
+            <h1>Sistemas complejos.<br>Narrativa emergente.</h1>
+            <p>Red Tape Studios es una empresa de desarrollo de software interactivo especializada en simulación sistémica, mecánicas de gestión y arquitecturas de juego escalables.</p>
         </section>
 
-        <!-- Spacer for Video Scrubbing -->
-        <div style="height: 100vh;"></div>
+        <div class="spacer"></div>
 
-        <!-- Section 2 -->
+        <!-- Vision / Philosophy -->
         <section class="scroll-section">
+            <h2 class="section-title">Nuestra Filosofía</h2>
+            <p class="section-desc">Creemos en videojuegos impulsados por bases de datos relacionales, modelos económicos robustos e inteligencias artificiales reactivas. Nuestro pipeline de desarrollo integra herramientas de IA de última generación para la generación de assets, optimización de código y testeo automatizado, permitiendo a un equipo ágil competir en escala y profundidad con estudios tradicionales.</p>
+        </section>
+
+        <div class="spacer"></div>
+
+        <!-- Portfolio Roadmap -->
+        <section class="scroll-section">
+            <h2 class="section-title">Roadmap de Proyectos</h2>
+            <p class="section-desc">Nuestro portafolio actual se centra en simuladores que exploran la condición humana a través de interfaces burocráticas y toma de decisiones morales.</p>
+            
             <div class="grid">
+                <!-- Proyecto en Desarrollo (Sale a Devolver camuflado) -->
                 <div class="card">
-                    <div class="icon-container">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                    </div>
-                    <h3>Desarrollo Arquitectónico</h3>
-                    <p>Construimos experiencias robustas basadas en simulación económica, toma de decisiones bajo presión y mecánicas de oficina automatizadas.</p>
+                    <span class="card-status status-dev">● En Desarrollo Activo (Alpha)</span>
+                    <h3>Project 'R'</h3>
+                    <p>Un simulador de gestión de recursos y ética burocrática. Implementa un motor de toma de decisiones no lineal, más de 400 tests automatizados de lógica económica y un sistema de NPCs reactivos guiados por parámetros de estrés y persuasión. Lanzamiento previsto: Abril 2027.</p>
                 </div>
+
+                <!-- Proyecto Inventado (Planificación) -->
                 <div class="card">
-                    <div class="icon-container">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                    </div>
-                    <h3>Project 'R' (Confidencial)</h3>
-                    <p>Nuestro próximo título principal se encuentra actualmente en fase de producción avanzada. Muy pronto anunciaremos los primeros detalles públicos.</p>
-                </div>
-                <div class="card">
-                    <div class="icon-container">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                    </div>
-                    <h3>Tecnología Propia</h3>
-                    <p>Utilizamos stacks tecnológicos avanzados y optimizados para garantizar un rendimiento impecable y bucles de juego altamente rejugables.</p>
+                    <span class="card-status status-plan">○ En Planificación (Pre-producción)</span>
+                    <h3>Project 'Nexus'</h3>
+                    <p>Sandbox de gestión macroeconómica y optimización de infraestructuras cívicas a gran escala. Actualmente en fase de prototipado del modelo de simulación de fluidos de tráfico y asignación de presupuestos dinámicos generados proceduralmente.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Spacer for Video Scrubbing -->
-        <div style="height: 100vh;"></div>
+        <div class="spacer"></div>
+
+        <!-- Technology Stack -->
+        <section class="scroll-section">
+            <h2 class="section-title">Tecnología y Pipeline</h2>
+            <div class="grid">
+                <div class="card">
+                    <span class="card-status status-tech">Arquitectura Base</span>
+                    <h3>Desarrollo Orientado a Datos</h3>
+                    <p>Separación estricta entre la lógica de simulación (backends en C#/C++) y la capa de presentación. Esto nos permite simular miles de entidades en tiempo real sin impacto en los fotogramas del jugador.</p>
+                </div>
+                <div class="card">
+                    <span class="card-status status-tech">Integración IA</span>
+                    <h3>AI-Assisted Workflow</h3>
+                    <p>Uso extensivo de modelos de lenguaje grandes (LLMs) para el diseño de sistemas, validación de arquitecturas complejas, y generación dinámica de árboles de diálogo con varianza procedural.</p>
+                </div>
+                <div class="card">
+                    <span class="card-status status-tech">QA & Testing</span>
+                    <h3>Validación Automatizada</h3>
+                    <p>Integración continua con baterías de tests unitarios enfocados en la solidez del bucle económico central, garantizando que ninguna actualización rompa el balance sistémico del juego.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="spacer"></div>
 
         <footer>
-            <p>&copy; 2026 Red Tape Studios. Todos los derechos reservados.</p>
+            <p>&copy; 2026 Red Tape Studios. Todos los derechos reservados. | Contacto comercial: info@redtapestudio.dev</p>
         </footer>
     </div>
 
@@ -351,18 +295,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.getElementById('scroll-video');
             const sections = document.querySelectorAll('.scroll-section');
-            const indicator = document.getElementById('scroll-indicator');
 
-            // Force video to load and ready up for scrubbing
             video.load();
             video.pause();
 
-            // Smooth scroll scrubbing configuration
             let targetScrollFraction = 0;
             let currentScrollFraction = 0;
-            const ease = 0.1; // lower is smoother but lags more behind scroll
+            // Hemos bajado el "ease" para suavizar un poco el salto entre frames
+            const ease = 0.05; 
 
-            // Calculate scroll fractions
             const onScroll = () => {
                 const scrollY = window.scrollY;
                 const maxScrollY = document.body.scrollHeight - window.innerHeight;
@@ -371,19 +312,10 @@
                 if(targetScrollFraction < 0) targetScrollFraction = 0;
                 if(targetScrollFraction > 1) targetScrollFraction = 1;
 
-                // Hide scroll indicator once user starts scrolling
-                if (scrollY > 50) {
-                    indicator.style.opacity = '0';
-                } else {
-                    indicator.style.opacity = '1';
-                }
-
-                // Fade sections in/out based on position
                 sections.forEach(section => {
                     const rect = section.getBoundingClientRect();
                     const windowHeight = window.innerHeight;
-                    // If section is reasonably in view
-                    if(rect.top < windowHeight * 0.75 && rect.bottom > windowHeight * 0.25) {
+                    if(rect.top < windowHeight * 0.85 && rect.bottom > windowHeight * 0.15) {
                         section.classList.add('visible');
                     } else {
                         section.classList.remove('visible');
@@ -391,17 +323,13 @@
                 });
             };
 
-            // Animation loop for smooth video scrubbing
             const render = () => {
                 if (video.readyState >= 2 && video.duration) {
-                    // Interpolate current scroll fraction towards target
                     currentScrollFraction += (targetScrollFraction - currentScrollFraction) * ease;
-                    
-                    // Convert fraction to time
                     const targetTime = currentScrollFraction * video.duration;
                     
-                    // Some browsers can choke if you update currentTime too often or by too little
-                    if(Math.abs(video.currentTime - targetTime) > 0.01) {
+                    // Actualización más fina para navegadores móviles
+                    if(Math.abs(video.currentTime - targetTime) > 0.03) {
                         video.currentTime = targetTime;
                     }
                 }
@@ -409,11 +337,7 @@
             };
 
             window.addEventListener('scroll', onScroll, { passive: true });
-            
-            // Start loop
             requestAnimationFrame(render);
-            
-            // Trigger once on load
             onScroll();
         });
     </script>
