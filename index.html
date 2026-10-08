@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Tape Studios | Independent Game Development</title>
+    <title>Red Tape Studios | Satirical Game Development</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap');
 
         :root {
-            --bg-color: #F4F0E6;
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --accent: #BE3127;
-            --text-main: #2A2A2A;
-            --text-muted: #5C5A55;
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --accent: #D32F2F;
+            --text-main: #1A1A1A;
+            --text-muted: #4A4A4A;
+            --border-color: #E0E0E0;
             
             --font-heading: 'Playfair Display', Georgia, serif;
             --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -30,7 +31,6 @@
             font-family: var(--font-main);
             line-height: 1.6;
             overflow-x: hidden;
-            /* Aumentamos la altura de la página para que dé tiempo a leer todo haciendo scroll */
             height: 900vh;
         }
 
@@ -41,7 +41,7 @@
             width: 100vw;
             height: 100vh;
             z-index: -1;
-            background-color: var(--bg-color);
+            background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,7 +52,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(244,240,230,0.8) 0%, rgba(244,240,230,0.4) 50%, rgba(244,240,230,0.95) 100%);
+            background: linear-gradient(to bottom, rgba(248,249,250,0.85) 0%, rgba(248,249,250,0.6) 50%, rgba(248,249,250,1) 100%);
             z-index: 1;
         }
 
@@ -60,7 +60,7 @@
             width: 100vw;
             height: 100vh;
             object-fit: cover;
-            opacity: 0.6;
+            opacity: 0.5;
             transition: opacity 0.5s ease;
         }
 
@@ -73,7 +73,7 @@
         }
 
         header {
-            padding: 1.5rem 5%;
+            padding: 2rem 5%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -81,15 +81,14 @@
             position: fixed;
             top: 0;
             z-index: 100;
-            background: linear-gradient(to bottom, rgba(244,240,230,0.95) 0%, rgba(244,240,230,0) 100%);
-            backdrop-filter: blur(4px);
+            background: linear-gradient(to bottom, rgba(248,249,250,0.95) 0%, rgba(248,249,250,0) 100%);
+            backdrop-filter: blur(8px);
         }
 
         .logo-img {
-            height: 100px;
+            height: 80px;
             width: auto;
             object-fit: contain;
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
             transition: transform 0.3s ease;
         }
 
@@ -113,99 +112,132 @@
 
         .hero h1 {
             font-family: var(--font-heading);
-            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-size: clamp(3rem, 7vw, 6rem);
             font-weight: 900;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.02em;
             margin-bottom: 1.5rem;
-            line-height: 1.1;
+            line-height: 1.05;
             color: var(--text-main);
         }
 
         .hero p, .section-desc {
-            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
             color: var(--text-muted);
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
+            font-weight: 400;
         }
 
         h2.section-title {
             font-family: var(--font-heading);
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
+            font-size: 3rem;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
         }
 
         .badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(190, 49, 39, 0.08);
+            background: rgba(211, 47, 47, 0.05);
             color: var(--accent);
-            padding: 0.5rem 1.2rem;
-            border-radius: 9999px;
-            font-size: 0.85rem;
-            font-weight: 700;
+            padding: 0.5rem 1.25rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
             margin-bottom: 2rem;
-            border: 1px solid rgba(190, 49, 39, 0.3);
+            border: 1px solid rgba(211, 47, 47, 0.2);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
             max-width: 1200px;
             width: 100%;
-            margin-top: 3rem;
+            margin-top: 4rem;
         }
 
         .card {
             background-color: var(--card-bg);
-            padding: 3rem 2rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(190, 49, 39, 0.15);
-            backdrop-filter: blur(12px);
+            padding: 3.5rem 2.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
             text-align: left;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);
             display: flex;
             flex-direction: column;
             height: 100%;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08), 0 2px 5px rgba(0,0,0,0.03);
+            border-color: rgba(211, 47, 47, 0.3);
         }
 
         .card-status {
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-            margin-bottom: 1rem;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .card-status::before {
+            content: '';
             display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 8px;
         }
 
-        .status-dev { color: #BE3127; }
-        .status-plan { color: #d97706; }
-        .status-tech { color: #0284c7; }
+        .status-dev { color: var(--accent); }
+        .status-dev::before { background-color: var(--accent); }
+        
+        .status-plan { color: #E67E22; }
+        .status-plan::before { background-color: #E67E22; }
+        
+        .status-tech { color: #2C3E50; }
+        .status-tech::before { background-color: #2C3E50; display: none; }
 
         .card h3 {
             font-family: var(--font-heading);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+            font-size: 1.75rem;
             font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
         }
 
         .card p {
             color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.7;
+            font-size: 1.05rem;
+            line-height: 1.8;
         }
 
-        .spacer { height: 70vh; }
+        .spacer { height: 60vh; }
 
         footer {
             text-align: center;
-            padding: 3rem 2rem;
+            padding: 4rem 2rem;
             color: var(--text-muted);
-            background: linear-gradient(to top, rgba(244,240,230,1) 0%, rgba(244,240,230,0) 100%);
+            font-size: 0.9rem;
+            background: linear-gradient(to top, rgba(248,249,250,1) 0%, rgba(248,249,250,0) 100%);
+        }
+        
+        @media (max-width: 768px) {
+            header { padding: 1.5rem 5%; }
+            .logo-img { height: 60px; }
+            .scroll-section { padding: 6rem 5%; }
+            .card { padding: 2.5rem 1.5rem; }
         }
     </style>
 </head>
@@ -223,39 +255,39 @@
         
         <!-- Hero -->
         <section class="scroll-section hero visible">
-            <div class="badge">Independent Studio</div>
-            <h1>Sistemas complejos.<br>Narrativa emergente.</h1>
-            <p>Red Tape Studios es una empresa de desarrollo de software interactivo especializada en simulación sistémica, mecánicas de gestión y arquitecturas de juego escalables.</p>
+            <div class="badge">Independent Game Studio</div>
+            <h1>The mundane,<br>made extraordinary.</h1>
+            <p>Red Tape Studios is an independent game development studio specializing in satirical simulations. We build deeply systemic games that explore the absurdities of everyday bureaucracy and authority.</p>
         </section>
 
         <div class="spacer"></div>
 
         <!-- Vision / Philosophy -->
         <section class="scroll-section">
-            <h2 class="section-title">Nuestra Filosofía</h2>
-            <p class="section-desc">Creemos en videojuegos impulsados por bases de datos relacionales, modelos económicos robustos e inteligencias artificiales reactivas. Nuestro pipeline de desarrollo integra herramientas de IA de última generación para la generación de assets, optimización de código y testeo automatizado, permitiendo a un equipo ágil competir en escala y profundidad con estudios tradicionales.</p>
+            <h2 class="section-title">Our Philosophy</h2>
+            <p class="section-desc">We believe the most compelling gameplay often hides in the most unexpected places. By taking notoriously tedious real-world systems and injecting them with dark humor and profound, systemic mechanics, we craft unique satirical experiences that challenge and entertain.</p>
         </section>
 
         <div class="spacer"></div>
 
         <!-- Portfolio Roadmap -->
         <section class="scroll-section">
-            <h2 class="section-title">Roadmap de Proyectos</h2>
-            <p class="section-desc">Nuestro portafolio actual se centra en simuladores que exploran la condición humana a través de interfaces burocráticas y toma de decisiones morales.</p>
+            <h2 class="section-title">In Development</h2>
+            <p class="section-desc">Our current portfolio focuses on simulations that explore the human condition through the lens of strict protocols, endless paperwork, and moral ambiguity.</p>
             
             <div class="grid">
-                <!-- Proyecto en Desarrollo (Sale a Devolver camuflado) -->
+                <!-- Project 1: Tax return (Vague) -->
                 <div class="card">
-                    <span class="card-status status-dev">● En Desarrollo Activo (Alpha)</span>
-                    <h3>Project 'R'</h3>
-                    <p>Un simulador de gestión de recursos y ética burocrática. Implementa un motor de toma de decisiones no lineal, más de 400 tests automatizados de lógica económica y un sistema de NPCs reactivos guiados por parámetros de estrés y persuasión. Lanzamiento previsto: Abril 2027.</p>
+                    <span class="card-status status-dev">Active Development (Alpha)</span>
+                    <h3>Project 'Audit'</h3>
+                    <p>A complex management simulator exploring the intricate and often absurd world of personal finance and bureaucratic compliance. Navigate a labyrinth of rules, enforce systemic logic, and deal with unexpected comedic consequences.</p>
                 </div>
 
-                <!-- Proyecto Inventado (Planificación) -->
+                <!-- Project 2: Traffic agent (Vague) -->
                 <div class="card">
-                    <span class="card-status status-plan">○ En Planificación (Pre-producción)</span>
-                    <h3>Project 'Nexus'</h3>
-                    <p>Sandbox de gestión macroeconómica y optimización de infraestructuras cívicas a gran escala. Actualmente en fase de prototipado del modelo de simulación de fluidos de tráfico y asignación de presupuestos dinámicos generados proceduralmente.</p>
+                    <span class="card-status status-plan">Pre-Production</span>
+                    <h3>Project 'Citation'</h3>
+                    <p>A civic authority simulator focusing on vehicular law enforcement. Balance public order, manage shifting regulations, and navigate the moral gray areas of daily transit in a highly reactive sandbox environment.</p>
                 </div>
             </div>
         </section>
@@ -264,22 +296,17 @@
 
         <!-- Technology Stack -->
         <section class="scroll-section">
-            <h2 class="section-title">Tecnología y Pipeline</h2>
+            <h2 class="section-title">Our Approach</h2>
             <div class="grid">
                 <div class="card">
-                    <span class="card-status status-tech">Arquitectura Base</span>
-                    <h3>Desarrollo Orientado a Datos</h3>
-                    <p>Separación estricta entre la lógica de simulación (backends en C#/C++) y la capa de presentación. Esto nos permite simular miles de entidades en tiempo real sin impacto en los fotogramas del jugador.</p>
+                    <span class="card-status status-tech">Systemic Design</span>
+                    <h3>Emergent Gameplay</h3>
+                    <p>Our core philosophy revolves around creating robust, interacting systems rather than heavily scripted events. This allows for unparalleled player agency and highly replayable, dynamic scenarios.</p>
                 </div>
                 <div class="card">
-                    <span class="card-status status-tech">Integración IA</span>
-                    <h3>AI-Assisted Workflow</h3>
-                    <p>Uso extensivo de modelos de lenguaje grandes (LLMs) para el diseño de sistemas, validación de arquitecturas complejas, y generación dinámica de árboles de diálogo con varianza procedural.</p>
-                </div>
-                <div class="card">
-                    <span class="card-status status-tech">QA & Testing</span>
-                    <h3>Validación Automatizada</h3>
-                    <p>Integración continua con baterías de tests unitarios enfocados en la solidez del bucle económico central, garantizando que ninguna actualización rompa el balance sistémico del juego.</p>
+                    <span class="card-status status-tech">Narrative</span>
+                    <h3>Interactive Satire</h3>
+                    <p>We use sharp writing and environmental storytelling to highlight the humor in strict rulesets. The narrative emerges naturally from the player's interactions with our complex, often stubborn, bureaucratic simulations.</p>
                 </div>
             </div>
         </section>
@@ -287,7 +314,7 @@
         <div class="spacer"></div>
 
         <footer>
-            <p>&copy; 2026 Red Tape Studios. Todos los derechos reservados. | Contacto comercial: info@redtapestudio.dev</p>
+            <p>&copy; 2026 Red Tape Studios. All rights reserved. | Business inquiries: info@redtapestudio.dev</p>
         </footer>
     </div>
 
@@ -301,7 +328,6 @@
 
             let targetScrollFraction = 0;
             let currentScrollFraction = 0;
-            // Hemos bajado el "ease" para suavizar un poco el salto entre frames
             const ease = 0.05; 
 
             const onScroll = () => {
@@ -328,7 +354,6 @@
                     currentScrollFraction += (targetScrollFraction - currentScrollFraction) * ease;
                     const targetTime = currentScrollFraction * video.duration;
                     
-                    // Actualización más fina para navegadores móviles
                     if(Math.abs(video.currentTime - targetTime) > 0.03) {
                         video.currentTime = targetTime;
                     }
