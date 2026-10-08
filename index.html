@@ -233,6 +233,57 @@
             background: linear-gradient(to top, rgba(248,249,250,1) 0%, rgba(248,249,250,0) 100%);
         }
         
+        .team-card {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .team-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .team-card p {
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #A00000;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: #FFFFFF;
+            padding: 1rem 2.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+            margin-top: 2rem;
+        }
+
+        .btn:hover {
+            background-color: #A00000;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             header { padding: 1.5rem 5%; }
             .logo-img { height: 60px; }
@@ -309,6 +360,30 @@
                     <p>We use sharp writing and environmental storytelling to highlight the humor in strict rulesets. The narrative emerges naturally from the player's interactions with our complex, often stubborn, bureaucratic simulations.</p>
                 </div>
             </div>
+        </section>
+
+        <div class="spacer"></div>
+
+        <!-- Our Team -->
+        <section class="scroll-section">
+            <h2 class="section-title">Our Team</h2>
+            <div class="card team-card">
+                <h3>Andres Sancenon</h3>
+                <p>Founder & Lead Developer</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/andressance" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a href="https://github.com/Andressance" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="spacer"></div>
+
+        <!-- Contact Us -->
+        <section class="scroll-section">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-desc">Interested in our projects? Have a bureaucratic nightmare you want us to simulate?</p>
+            <a href="mailto:contact@redtapestudio.dev" class="btn">Contact Us</a>
         </section>
 
         <div class="spacer"></div>
