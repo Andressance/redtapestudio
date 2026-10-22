@@ -1,0 +1,17 @@
+<header class="site-header">
+    <a href="{{ '/' | relative_url }}" class="brand" aria-label="Red Tape Studios">
+        <img src="{{ '/assets/img/redtape-mark.webp' | relative_url }}" alt="" width="102" height="160">
+        <span class="brand-name"><b>Red Tape</b> Studios</span>
+    </a>
+    <div class="header-actions">
+        <nav class="site-nav" aria-label="Principal">
+            {%- for item in site.data.nav %}
+            <a href="{{ item.url | relative_url }}"><span lang="es">{{ item.es }}</span><span lang="en">{{ item.en }}</span></a>
+            {%- endfor %}
+        </nav>
+        <div class="lang-toggle" role="group" aria-label="Idioma / Language">
+            <button type="button" data-set-lang="es" aria-pressed="true">ES</button>
+            <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+        </div>
+    </div>
+</header>

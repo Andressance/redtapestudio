@@ -1,0 +1,10 @@
+# Studio profiles shown in the footer. `icon` names a file in _includes/icons/.
+- name: LinkedIn
+  url: https://www.linkedin.com/company/146707776
+  icon: linkedin
+- name: X
+  url: https://x.com/redtapesudio
+  icon: x
+- name: Instagram
+  url: https://www.instagram.com/studioredtape
+  icon: instagram

@@ -1,0 +1,13 @@
+# Main menu. `url` is site-relative; `es`/`en` are the labels.
+- url: /#juegos
+  es: Juegos
+  en: Games
+- url: /#enfoque
+  es: Enfoque
+  en: Approach
+- url: /#equipo
+  es: Equipo
+  en: Team
+- url: /#contacto
+  es: Contacto
+  en: Contact

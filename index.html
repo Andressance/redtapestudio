@@ -1,688 +1,196 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Tape Studios | Satirical Game Development</title>
-    <link rel="icon" type="image/png" href="redtape-logo.png">
-    <meta name="description" content="Red Tape Studios is an independent game development studio based in Valencia, Spain, specializing in deeply systemic satirical simulations.">
-    
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="Red Tape Studios">
-    <meta property="og:description" content="The mundane, made extraordinary. Independent game studio specializing in satirical simulations.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="redtape-logo.png">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap');
-
-        :root {
-            --bg-color: #F8F9FA;
-            --card-bg: #FFFFFF;
-            --accent: #D32F2F;
-            --text-main: #1A1A1A;
-            --text-muted: #4A4A4A;
-            --border-color: #E0E0E0;
-            
-            --font-heading: 'Playfair Display', Georgia, serif;
-            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-            height: 900vh;
-        }
-
-        #video-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        #video-container::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(248,249,250,0.85) 0%, rgba(248,249,250,0.6) 50%, rgba(248,249,250,1) 100%);
-            z-index: 1;
-        }
-
-        #scroll-video {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            opacity: 0.5;
-            transition: opacity 0.5s ease;
-        }
-
-        #content-layer {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-
-        header {
-            padding: 2rem 5%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            z-index: 100;
-            background: linear-gradient(to bottom, rgba(248,249,250,0.95) 0%, rgba(248,249,250,0) 100%);
-            backdrop-filter: blur(8px);
-        }
-
-        .logo-img {
-            height: 80px;
-            width: auto;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        .scroll-section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 4rem 5%;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .scroll-section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .hero h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(3rem, 7vw, 6rem);
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            margin-bottom: 1.5rem;
-            line-height: 1.05;
-            color: var(--text-main);
-        }
-
-        .hero p, .section-desc {
-            font-size: clamp(1.1rem, 2vw, 1.25rem);
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto;
-            font-weight: 400;
-        }
-
-        h2.section-title {
-            font-family: var(--font-heading);
-            font-size: 3rem;
-            margin-bottom: 1.25rem;
-            color: var(--text-main);
-            letter-spacing: -0.01em;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(211, 47, 47, 0.05);
-            color: var(--accent);
-            padding: 0.5rem 1.25rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(211, 47, 47, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            max-width: 1200px;
-            width: 100%;
-            margin-top: 4rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            padding: 3.5rem 2.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            text-align: left;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.08), 0 2px 5px rgba(0,0,0,0.03);
-            border-color: rgba(211, 47, 47, 0.3);
-        }
-
-        .card-status {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        .card-status::before {
-            content: '';
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .status-dev { color: var(--accent); }
-        .status-dev::before { background-color: var(--accent); }
-        
-        .status-plan { color: #E67E22; }
-        .status-plan::before { background-color: #E67E22; }
-        
-        .status-tech { color: #2C3E50; }
-        .status-tech::before { background-color: #2C3E50; display: none; }
-
-        .card h3 {
-            font-family: var(--font-heading);
-            margin-bottom: 1.25rem;
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: -0.01em;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            line-height: 1.8;
-        }
-
-        .spacer { height: 60vh; }
-
-        footer {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            background: linear-gradient(to top, rgba(248,249,250,1) 0%, rgba(248,249,250,0) 100%);
-        }
-        
-        .game-img-container {
-            width: 100%;
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            background: #FAFAFA;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1rem;
-            overflow: hidden;
-        }
-
-        .game-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .card:hover .game-img {
-            transform: scale(1.05);
-        }
-
-        .game-tagline {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-main);
-            line-height: 1.5;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-
-        .game-features {
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .game-features h4 {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--accent);
-            margin-bottom: 0.75rem;
-            font-weight: 700;
-        }
-
-        .game-features ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
-
-        .game-features li {
-            position: relative;
-            padding-left: 1.25rem;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: var(--text-muted);
-        }
-
-        .game-features li::before {
-            content: "—";
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .game-features li strong {
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        .game-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-top: auto;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .meta-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-        }
-
-        .meta-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .meta-val {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .game-link {
-            margin-top: 1.5rem;
-            color: var(--accent);
-            font-weight: 600;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .game-link:hover {
-            color: #A00000;
-        }
-
-        .team-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 2.5rem;
-            max-width: 850px;
-            width: 100%;
-            margin-top: 3.5rem;
-        }
-
-        .team-card {
-            flex: 1 1 320px;
-            max-width: 380px;
-            text-align: center;
-        }
-        
-        .team-card h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .team-card p {
-            margin-bottom: 1.5rem;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-
-        .social-links a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .social-links a:hover {
-            color: #A00000;
-        }
-        
-        .social-icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: #FFFFFF;
-            padding: 1rem 2.5rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
-            margin-top: 2rem;
-        }
-
-        .btn:hover {
-            background-color: #A00000;
-            transform: translateY(-2px);
-        }
-        
-        .footer-social-links {
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-        }
-        
-        .footer-social-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-social-links a:hover {
-            color: var(--accent);
-        }
-
-        @media (max-width: 768px) {
-            header { padding: 1.5rem 5%; }
-            .logo-img { height: 60px; }
-            .scroll-section { padding: 6rem 5%; }
-            .card { padding: 2.5rem 1.5rem; }
-        }
-    </style>
-</head>
-<body>
-
-    <div id="video-container">
-        <video id="scroll-video" src="tu-video.mp4" muted playsinline preload="auto"></video>
-    </div>
-
-    <header>
-        <img src="redtape-logo.png" alt="Red Tape Studios" class="logo-img">
-    </header>
-
-    <div id="content-layer">
-        
-        <!-- Hero -->
-        <section class="scroll-section hero visible">
-            <div class="badge">Independent Game Studio</div>
-            <h1>The mundane,<br>made extraordinary.</h1>
-            <p>Red Tape Studios is an independent game development studio specializing in satirical simulations. We build deeply systemic games that explore the absurdities of everyday bureaucracy and authority.</p>
+---
+layout: default
+title_es: Red Tape Studios | Simulaciones satíricas
+title_en: Red Tape Studios | Satirical Game Development
+description: Red Tape Studios is an independent game development studio based in Valencia, Spain, specializing in deeply systemic satirical simulations.
+og_image: /assets/video/logo-reveal-poster.webp
+styles:
+  - /assets/css/home.css
+scripts:
+  - /assets/js/home.js
+---
+        <!-- Intro: the logo animation is scrubbed with the scroll -->
+        <section class="intro" data-header-dark aria-label="Red Tape Studios">
+            <div class="intro-sticky">
+                <video class="intro-video" poster="{{ '/assets/video/logo-reveal-poster.webp' | relative_url }}" muted playsinline preload="auto" aria-hidden="true">
+                    <source src="{{ '/assets/video/logo-reveal.mp4' | relative_url }}" type="video/mp4">
+                    <source src="{{ '/assets/video/logo-reveal.webm' | relative_url }}" type="video/webm">
+                </video>
+                <div class="intro-copy">
+                    <p class="intro-kicker"><span lang="es">Estudio independiente · Valencia</span><span lang="en">Independent game studio · Valencia</span></p>
+                    <h1>
+                        <span lang="es">Lo mundano,<br><em>convertido en extraordinario.</em></span>
+                        <span lang="en">The mundane,<br><em>made extraordinary.</em></span>
+                    </h1>
+                    <p class="intro-lead">
+                        <span lang="es">Hacemos simulaciones satíricas y muy sistémicas sobre lo absurdo de la burocracia y la autoridad de todos los días.</span>
+                        <span lang="en">We build deeply systemic satirical simulations that explore the absurdities of everyday bureaucracy and authority.</span>
+                    </p>
+                </div>
+                <a class="scroll-cue" href="#estudio"><span lang="es">Desliza</span><span lang="en">Scroll</span></a>
+            </div>
         </section>
 
-        <div class="spacer"></div>
-
-        <!-- Vision / Philosophy -->
-        <section class="scroll-section">
-            <h2 class="section-title">Our Philosophy</h2>
-            <p class="section-desc">We believe the most compelling gameplay often hides in the most unexpected places. By taking notoriously tedious real-world systems and injecting them with dark humor and profound, systemic mechanics, we craft unique satirical experiences that challenge and entertain.</p>
+        <!-- Philosophy -->
+        <section id="estudio" class="section philosophy reveal">
+            <div class="philosophy-inner">
+                <p class="eyebrow"><span lang="es">Nuestra filosofía</span><span lang="en">Our philosophy</span></p>
+                <h2 class="section-title">
+                    <span lang="es">El mejor gameplay se esconde donde <em>nadie mira.</em></span>
+                    <span lang="en">The best gameplay hides where <em>nobody looks.</em></span>
+                </h2>
+                <p class="section-desc">
+                    <span lang="es">Cogemos sistemas reales famosos por lo tediosos, les inyectamos humor negro y mecánicas sistémicas profundas, y los convertimos en experiencias satíricas que retan y entretienen.</span>
+                    <span lang="en">We take notoriously tedious real-world systems, inject them with dark humour and deep, systemic mechanics, and craft unique satirical experiences that challenge and entertain.</span>
+                </p>
+            </div>
         </section>
 
-        <div class="spacer"></div>
+        <!-- Games -->
+        <section id="juegos" class="section games reveal">
+            <p class="eyebrow"><span lang="es">En desarrollo</span><span lang="en">In development</span></p>
+            <h2 class="section-title"><span lang="es">Nuestros juegos</span><span lang="en">Our games</span></h2>
+            <p class="section-desc">
+                <span lang="es">Simulaciones sobre la condición humana vista a través de protocolos estrictos, papeleo infinito y ambigüedad moral.</span>
+                <span lang="en">Simulations that explore the human condition through strict protocols, endless paperwork and moral ambiguity.</span>
+            </p>
 
-        <!-- Portfolio Roadmap -->
-        <section class="scroll-section">
-            <h2 class="section-title">In Development</h2>
-            <p class="section-desc">Our current portfolio focuses on simulations that explore the human condition through the lens of strict protocols, endless paperwork, and moral ambiguity.</p>
-            
-            <div class="grid">
-                <!-- Project 1: Sale a Devolver -->
-                <div class="card">
-                    <div class="game-img-container">
-                        <img src="SaleADevolver.png" alt="Sale a Devolver" class="game-img" loading="lazy">
-                    </div>
-                    <span class="card-status status-dev">Active Development (Alpha)</span>
+            <article class="feature">
+                <a class="feature-media" href="{{ '/sale-a-devolver/' | relative_url }}" aria-label="Sale a Devolver">
+                    <img class="feature-shot" src="{{ '/sale-a-devolver/img/ascensor.webp' | relative_url }}" alt="" width="1280" height="720" loading="lazy">
+                    <img class="feature-logo" src="{{ '/sale-a-devolver/img/logo.webp' | relative_url }}" alt="Sale a Devolver" width="1200" height="896" loading="lazy">
+                </a>
+                <div class="feature-body">
+                    <span class="status status-live"><span lang="es">En desarrollo activo (alfa)</span><span lang="en">Active development (alpha)</span></span>
                     <h3>Sale a Devolver</h3>
-                    <p class="game-tagline">The game where the real nightmare isn't monsters—it's a tax audit.</p>
-                    <p>A satirical management simulation about bureaucracy, administrative agencies, and the tax system. Take charge of your own consultancy office, manage surreal case files, serve desperate clients, and dodge inspections while deciding whether to play 100% by the book... or push the margins.</p>
-                    
-                    <div class="game-features">
-                        <h4>Key Features</h4>
-                        <ul>
-                            <li><strong>Everyday Comedy & Irony:</strong> Situations, procedures, and official paperwork inspired by real-world administrative chaos.</li>
-                            <li><strong>Consequential Decisions:</strong> Every signature, rubber stamp, and fiscal deduction counts.</li>
-                            <li><strong>Distinctive Visual Style:</strong> A first-person 3D office with a comic-book look, full of personality and authentic stationery details.</li>
-                        </ul>
-                    </div>
-
-                    <div class="game-meta">
+                    <p class="feature-tagline">
+                        <span lang="es">El juego donde la verdadera pesadilla no son los monstruos: es una inspección de Hacienda.</span>
+                        <span lang="en">The game where the real nightmare isn't monsters: it's a tax audit.</span>
+                    </p>
+                    <p>
+                        <span lang="es">Un simulador de gestión satírico sobre la burocracia y el sistema fiscal. Lleva tu propia gestoría, tramita expedientes surrealistas, atiende a clientes desesperados y esquiva inspecciones mientras decides si lo haces todo según la ley… o estiras los márgenes.</span>
+                        <span lang="en">A satirical management sim about bureaucracy and the tax system. Run your own consultancy, handle surreal case files, serve desperate clients and dodge inspections while deciding whether to play 100% by the book… or push the margins.</span>
+                    </p>
+                    <ul class="feature-list">
+                        <li>
+                            <strong><span lang="es">Comedia cotidiana:</span><span lang="en">Everyday comedy:</span></strong>
+                            <span lang="es">trámites y papeleo inspirados en el caos administrativo real.</span>
+                            <span lang="en">procedures and paperwork inspired by real-world administrative chaos.</span>
+                        </li>
+                        <li>
+                            <strong><span lang="es">Decisiones con consecuencias:</span><span lang="en">Consequential decisions:</span></strong>
+                            <span lang="es">cada firma, cada sello y cada deducción cuenta.</span>
+                            <span lang="en">every signature, rubber stamp and deduction counts.</span>
+                        </li>
+                        <li>
+                            <strong><span lang="es">Estilo propio:</span><span lang="en">Distinctive style:</span></strong>
+                            <span lang="es">una oficina en 3D y primera persona con aire de cómic, llena de personalidad y material de oficina auténtico.</span>
+                            <span lang="en">a first-person 3D office with a comic-book look, full of personality and authentic stationery details.</span>
+                        </li>
+                    </ul>
+                    <div class="meta-list">
                         <div class="meta-item">
-                            <span class="meta-label">Release</span>
-                            <span class="meta-val">Steam Next Fest Demo (February 2027)</span>
+                            <span class="meta-label"><span lang="es">Lanzamiento</span><span lang="en">Release</span></span>
+                            <span class="meta-val"><span lang="es">Demo en el Steam Next Fest (febrero de 2027)</span><span lang="en">Steam Next Fest demo (February 2027)</span></span>
                         </div>
                         <div class="meta-item">
-                            <span class="meta-label">Platform</span>
+                            <span class="meta-label"><span lang="es">Plataforma</span><span lang="en">Platform</span></span>
                             <span class="meta-val">PC (Steam)</span>
                         </div>
                     </div>
-
-                    <a href="sale-a-devolver/" class="game-link">Visit the game page &rarr;</a>
+                    <a class="btn" href="{{ '/sale-a-devolver/' | relative_url }}"><span lang="es">Ver el juego</span><span lang="en">See the game</span> <span aria-hidden="true">&rarr;</span></a>
                 </div>
+            </article>
 
-                <!-- Project 2 -->
-                <div class="card">
-                    <span class="card-status status-plan">Pre-Production</span>
-                    <h3>Project 'Citation'</h3>
-                    <p>A civic authority simulator focusing on vehicular law enforcement. Balance public order, manage shifting regulations, and navigate the moral gray areas of daily transit in a highly reactive sandbox environment.</p>
-
-                    <div class="game-meta">
-                        <div class="meta-item">
-                            <span class="meta-label">Status</span>
-                            <span class="meta-val">Concept & Mechanics Design</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Platform</span>
-                            <span class="meta-val">PC</span>
-                        </div>
+            <article class="card upcoming">
+                <div>
+                    <span class="status status-plan"><span lang="es">Preproducción</span><span lang="en">Pre-production</span></span>
+                    <h3><span lang="es">Proyecto «Citation»</span><span lang="en">Project 'Citation'</span></h3>
+                    <p>
+                        <span lang="es">Un simulador de autoridad civil centrado en el tráfico. Mantén el orden público, adáptate a normas que cambian y navega las zonas grises del día a día en un entorno sandbox muy reactivo.</span>
+                        <span lang="en">A civic authority simulator focused on vehicular law enforcement. Balance public order, manage shifting regulations and navigate the moral grey areas of daily transit in a highly reactive sandbox.</span>
+                    </p>
+                </div>
+                <div class="meta-list upcoming-meta">
+                    <div class="meta-item">
+                        <span class="meta-label"><span lang="es">Estado</span><span lang="en">Status</span></span>
+                        <span class="meta-val"><span lang="es">Concepto y diseño de mecánicas</span><span lang="en">Concept &amp; mechanics design</span></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label"><span lang="es">Plataforma</span><span lang="en">Platform</span></span>
+                        <span class="meta-val">PC</span>
                     </div>
                 </div>
-            </div>
+                <span class="classified" aria-hidden="true"><span lang="es">Clasificado</span><span lang="en">Classified</span></span>
+            </article>
         </section>
 
-        <div class="spacer"></div>
-
-        <!-- Technology Stack -->
-        <section class="scroll-section">
-            <h2 class="section-title">Our Approach</h2>
+        <!-- Approach -->
+        <section id="enfoque" class="section reveal">
+            <p class="eyebrow"><span lang="es">Cómo trabajamos</span><span lang="en">How we work</span></p>
+            <h2 class="section-title"><span lang="es">Nuestro enfoque</span><span lang="en">Our approach</span></h2>
             <div class="grid">
                 <div class="card">
-                    <span class="card-status status-tech">Systemic Design</span>
-                    <h3>Emergent Gameplay</h3>
-                    <p>Our core philosophy revolves around creating robust, interacting systems rather than heavily scripted events. This allows for unparalleled player agency and highly replayable, dynamic scenarios.</p>
+                    <span class="card-num">01 · <span lang="es">Diseño sistémico</span><span lang="en">Systemic design</span></span>
+                    <h3><span lang="es">Gameplay emergente</span><span lang="en">Emergent gameplay</span></h3>
+                    <p lang="es">Creamos sistemas sólidos que interactúan entre sí en lugar de eventos guionizados. Así el jugador tiene más libertad y cada partida es distinta.</p>
+                    <p lang="en">We build robust, interacting systems rather than heavily scripted events. That means real player agency and highly replayable, dynamic scenarios.</p>
                 </div>
                 <div class="card">
-                    <span class="card-status status-tech">Narrative</span>
-                    <h3>Interactive Satire</h3>
-                    <p>We use sharp writing and environmental storytelling to highlight the humor in strict rulesets. The narrative emerges naturally from the player's interactions with our complex, often stubborn, bureaucratic simulations.</p>
+                    <span class="card-num">02 · <span lang="es">Narrativa</span><span lang="en">Narrative</span></span>
+                    <h3><span lang="es">Sátira interactiva</span><span lang="en">Interactive satire</span></h3>
+                    <p lang="es">Usamos escritura afilada y narrativa ambiental para sacar el humor de las reglas estrictas. La historia surge sola de cómo el jugador se pelea con nuestras simulaciones burocráticas.</p>
+                    <p lang="en">Sharp writing and environmental storytelling bring out the humour in strict rulesets. The story emerges from how players wrestle with our stubborn bureaucratic simulations.</p>
                 </div>
                 <div class="card">
-                    <span class="card-status status-tech">Pipeline</span>
-                    <h3>AI-Powered Workflow</h3>
-                    <p>As an agile independent studio, we leverage advanced Large Language Models to scale our capabilities. From procedural NPC dialogue generation to validating complex economic systems, AI is at the core of our development pipeline.</p>
+                    <span class="card-num">03 · Pipeline</span>
+                    <h3><span lang="es">Flujo de trabajo con IA</span><span lang="en">AI-powered workflow</span></h3>
+                    <p lang="es">Como estudio independiente y ágil, usamos modelos de lenguaje avanzados para crecer: desde generar diálogos de personajes hasta validar sistemas económicos complejos.</p>
+                    <p lang="en">As an agile independent studio, we use advanced large language models to scale, from procedural NPC dialogue to validating complex economic systems.</p>
                 </div>
             </div>
         </section>
 
-        <div class="spacer"></div>
-
-        <!-- Our Team -->
-        <section class="scroll-section">
-            <h2 class="section-title">Our Team</h2>
+        <!-- Team -->
+        <section id="equipo" class="section reveal">
+            <p class="eyebrow"><span lang="es">Quiénes somos</span><span lang="en">Who we are</span></p>
+            <h2 class="section-title"><span lang="es">El equipo</span><span lang="en">The team</span></h2>
             <div class="team-grid">
-                <div class="card team-card">
+                <article class="card team-card">
+                    <span class="monogram" aria-hidden="true">AS</span>
                     <h3>Andres Sancenon</h3>
-                    <p>Co-Founder & Developer</p>
-                    <div class="social-links">
-                        <a href="https://www.linkedin.com/in/andressance" target="_blank" rel="noopener noreferrer">
-                            <svg class="social-icon" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                            Personal LinkedIn
-                        </a>
-                        <a href="https://github.com/Andressance" target="_blank" rel="noopener noreferrer">
-                            <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                            GitHub
-                        </a>
+                    <p><span lang="es">Cofundador y desarrollador</span><span lang="en">Co-Founder &amp; Developer</span></p>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/andressance" target="_blank" rel="noopener noreferrer">{% include icons/linkedin.svg %} LinkedIn</a>
+                        <a href="https://github.com/Andressance" target="_blank" rel="noopener noreferrer">{% include icons/github.svg %} GitHub</a>
                     </div>
-                </div>
-                <div class="card team-card">
+                </article>
+                <article class="card team-card">
+                    <span class="monogram" aria-hidden="true">SF</span>
                     <h3>Santiago Fuentes</h3>
-                    <p>Co-Founder & Developer</p>
-                    <div class="social-links">
-                        <a href="https://www.linkedin.com/in/santiago-fuentes-albuixech-375b66267/" target="_blank" rel="noopener noreferrer">
-                            <svg class="social-icon" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                            Personal LinkedIn
-                        </a>
-                        <a href="https://github.com/San1190" target="_blank" rel="noopener noreferrer">
-                            <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                            GitHub
-                        </a>
+                    <p><span lang="es">Cofundador y desarrollador</span><span lang="en">Co-Founder &amp; Developer</span></p>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/santiago-fuentes-albuixech-375b66267/" target="_blank" rel="noopener noreferrer">{% include icons/linkedin.svg %} LinkedIn</a>
+                        <a href="https://github.com/San1190" target="_blank" rel="noopener noreferrer">{% include icons/github.svg %} GitHub</a>
                     </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contacto" class="section contact" data-header-dark>
+            <div class="contact-inner reveal">
+                <h2 class="section-title">
+                    <span lang="es">¿Tienes una pesadilla burocrática<br>que quieras ver <em>simulada?</em></span>
+                    <span lang="en">Got a bureaucratic nightmare<br>you'd like us to <em>simulate?</em></span>
+                </h2>
+                <p class="section-desc">
+                    <span lang="es">Prensa, colaboraciones o simple curiosidad por nuestros proyectos: escríbenos.</span>
+                    <span lang="en">Press, partnerships or just curious about our projects: drop us a line.</span>
+                </p>
+                <div class="cta-row">
+                    <a href="mailto:contact@redtapestudio.dev" class="btn"><span lang="es">Escríbenos</span><span lang="en">Contact us</span></a>
                 </div>
+                <p class="contact-mail">contact@redtapestudio.dev</p>
             </div>
         </section>
-
-        <div class="spacer"></div>
-
-        <!-- Contact Us -->
-        <section class="scroll-section">
-            <h2 class="section-title">Get In Touch</h2>
-            <p class="section-desc">Interested in our projects? Have a bureaucratic nightmare you want us to simulate?</p>
-            <a href="mailto:contact@redtapestudio.dev" class="btn">Contact Us</a>
-        </section>
-
-        <div class="spacer"></div>
-
-        <footer>
-            <div class="footer-social-links">
-                <!-- LINKEDIN CORPORATIVO -->
-                <a href="https://www.linkedin.com/company/146707776" target="_blank" rel="noopener noreferrer" title="Red Tape Studios LinkedIn">
-                    <svg class="social-icon" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                </a>
-                <!-- X / TWITTER CORPORATIVO -->
-                <a href="https://x.com/redtapesudio" target="_blank" rel="noopener noreferrer" title="Red Tape Studios X/Twitter">
-                    <svg class="social-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                </a>
-                <!-- INSTAGRAM CORPORATIVO -->
-                <a href="https://www.instagram.com/studioredtape" target="_blank" rel="noopener noreferrer" title="Red Tape Studios Instagram">
-                    <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                </a>
-            </div>
-            <p>&copy; 2026 Red Tape Studios. Based in Valencia, Spain. | Business inquiries: info@redtapestudio.dev</p>
-        </footer>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const video = document.getElementById('scroll-video');
-            const sections = document.querySelectorAll('.scroll-section');
-
-            video.load();
-            video.pause();
-
-            let targetScrollFraction = 0;
-            let currentScrollFraction = 0;
-            const ease = 0.05; 
-
-            const onScroll = () => {
-                const scrollY = window.scrollY;
-                const maxScrollY = document.body.scrollHeight - window.innerHeight;
-                
-                targetScrollFraction = scrollY / maxScrollY;
-                if(targetScrollFraction < 0) targetScrollFraction = 0;
-                if(targetScrollFraction > 1) targetScrollFraction = 1;
-
-                sections.forEach(section => {
-                    const rect = section.getBoundingClientRect();
-                    const windowHeight = window.innerHeight;
-                    if(rect.top < windowHeight * 0.85 && rect.bottom > windowHeight * 0.15) {
-                        section.classList.add('visible');
-                    } else {
-                        section.classList.remove('visible');
-                    }
-                });
-            };
-
-            const render = () => {
-                if (video.readyState >= 2 && video.duration) {
-                    currentScrollFraction += (targetScrollFraction - currentScrollFraction) * ease;
-                    const targetTime = currentScrollFraction * video.duration;
-                    
-                    if(Math.abs(video.currentTime - targetTime) > 0.03) {
-                        video.currentTime = targetTime;
-                    }
-                }
-                requestAnimationFrame(render);
-            };
-
-            window.addEventListener('scroll', onScroll, { passive: true });
-            requestAnimationFrame(render);
-            onScroll();
-        });
-    </script>
-</body>
-</html>
