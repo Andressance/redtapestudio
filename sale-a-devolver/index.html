@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale a Devolver | Red Tape Studios</title>
+    <link rel="icon" type="image/png" href="../redtape-logo.png">
+    <meta name="description" content="Sale a Devolver: simulador de gestoría con humor negro. Tramita declaraciones, decide entre la ley y el fraude y sobrevive a Hacienda. Próximamente en Steam.">
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Sale a Devolver">
+    <meta property="og:description" content="Cumple la ley… o no. Un simulador de gestoría con humor negro de Red Tape Studios.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://redtapestudio.dev/sale-a-devolver/img/menu.webp">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --paper: #FBF7EE;
+            --accent: #D32F2F;
+            --accent-dark: #A00000;
+            --green: #3E9B47;
+            --text-main: #1A1A1A;
+            --text-muted: #4A4A4A;
+            --border-color: #E0E0E0;
+
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── Idioma: solo se ve el texto del idioma activo ── */
+        html[data-lang="es"] [lang="en"],
+        html[data-lang="en"] [lang="es"] { display: none !important; }
+
+        /* ── Cabecera ── */
+        header {
+            padding: 1.25rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(248,249,250,0.95) 0%, rgba(248,249,250,0.6) 100%);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .studio-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .studio-link img { height: 48px; width: auto; }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-left: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover { color: var(--accent); }
+
+        .lang-toggle {
+            display: flex;
+            border: 1px solid rgba(211, 47, 47, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .lang-toggle button {
+            background: none;
+            border: none;
+            padding: 0.35rem 0.7rem;
+            font: 600 0.75rem var(--font-main);
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            cursor: pointer;
+        }
+
+        .lang-toggle button[aria-pressed="true"] {
+            background: var(--accent);
+            color: #FFFFFF;
+        }
+
+        /* ── Secciones ── */
+        section {
+            padding: 7rem 5%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2.section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.01em;
+            line-height: 1.15;
+        }
+
+        .section-desc {
+            font-size: clamp(1.05rem, 2vw, 1.2rem);
+            color: var(--text-muted);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(211, 47, 47, 0.05);
+            color: var(--accent);
+            padding: 0.5rem 1.25rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(211, 47, 47, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        /* ── Portada ── */
+        .hero {
+            min-height: 100vh;
+            justify-content: center;
+            padding-top: 9rem;
+            background:
+                radial-gradient(ellipse at 50% 35%, rgba(211,47,47,0.08) 0%, rgba(248,249,250,0) 60%),
+                var(--bg-color);
+        }
+
+        .hero-logo {
+            width: min(560px, 90vw);
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 18px 30px rgba(0,0,0,0.18));
+            animation: stamp 0.7s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+        }
+
+        @keyframes stamp {
+            from { transform: scale(1.4) rotate(-6deg); opacity: 0; }
+            to { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        .hero-tagline {
+            font-family: var(--font-heading);
+            font-size: clamp(1.6rem, 4vw, 2.6rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-tagline em {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: #FFFFFF;
+            padding: 1rem 2.25rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid rgba(211, 47, 47, 0.4);
+            box-shadow: none;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(211, 47, 47, 0.06);
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-top: 3.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .meta-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .meta-val {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* ── Tarjetas ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 3.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08), 0 2px 5px rgba(0,0,0,0.03);
+            border-color: rgba(211, 47, 47, 0.3);
+        }
+
+        .card-num {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card h3 {
+            font-family: var(--font-heading);
+            margin-bottom: 0.9rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.25;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.75;
+        }
+
+        /* ── Expediente (premisa) ── */
+        .dossier {
+            position: relative;
+            max-width: 820px;
+            width: 100%;
+            margin-top: 3rem;
+            background: var(--paper);
+            border: 1px solid #E6DCC6;
+            border-radius: 4px;
+            padding: 3rem 2.75rem;
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+        }
+
+        .dossier-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px dashed #CDBF9F;
+            padding-bottom: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dossier p {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1rem;
+        }
+
+        .dossier p:last-of-type { margin-bottom: 0; }
+
+        .stamp {
+            position: absolute;
+            right: 1.75rem;
+            bottom: -1.5rem;
+            transform: rotate(-9deg);
+            border: 3px solid var(--accent);
+            color: var(--accent);
+            background: rgba(251,247,238,0.92);
+            padding: 0.4rem 1rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            border-radius: 4px;
+        }
+
+        /* ── Capturas ── */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 3.5rem;
+        }
+
+        .gallery figure {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            text-align: left;
+        }
+
+        .gallery figure.wide { grid-column: 1 / -1; }
+
+        .gallery button {
+            display: block;
+            width: 100%;
+            border: none;
+            padding: 0;
+            background: #000;
+            cursor: zoom-in;
+            overflow: hidden;
+        }
+
+        .gallery img {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery button:hover img { transform: scale(1.03); }
+
+        .gallery figcaption {
+            padding: 1rem 1.25rem;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(10,10,10,0.88);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            cursor: zoom-out;
+        }
+
+        .lightbox.open { display: flex; }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 6px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        }
+
+        /* ── Reparto ── */
+        .cast {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 3.5rem;
+        }
+
+        .person {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem 1.75rem 1.75rem;
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+        }
+
+        .person:hover {
+            transform: translateY(-4px);
+            border-color: rgba(211, 47, 47, 0.3);
+        }
+
+        .person::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: 50%;
+            width: 54px;
+            height: 14px;
+            margin-left: -27px;
+            background: rgba(211, 47, 47, 0.18);
+            transform: rotate(-3deg);
+        }
+
+        .person-role {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .person h3 {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            margin: 0.35rem 0 0.75rem;
+            line-height: 1.25;
+        }
+
+        .person p {
+            color: var(--text-muted);
+            font-size: 0.97rem;
+            line-height: 1.7;
+        }
+
+        .person blockquote {
+            margin-top: 1rem;
+            padding-top: 0.9rem;
+            border-top: 1px dashed var(--border-color);
+            font-style: italic;
+            font-size: 0.92rem;
+            color: var(--text-main);
+        }
+
+        /* ── Día de trabajo ── */
+        .timeline {
+            list-style: none;
+            max-width: 760px;
+            width: 100%;
+            margin-top: 3rem;
+            text-align: left;
+            border-left: 2px solid rgba(211, 47, 47, 0.25);
+        }
+
+        .timeline li {
+            position: relative;
+            padding: 0 0 2rem 2rem;
+        }
+
+        .timeline li:last-child { padding-bottom: 0; }
+
+        .timeline li::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 0.45rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px var(--bg-color);
+        }
+
+        .timeline time {
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .timeline strong { font-weight: 600; }
+
+        .timeline p {
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ── Pie ── */
+        .disclaimer {
+            max-width: 760px;
+            margin: 0 auto;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: var(--paper);
+            border: 1px solid #E6DCC6;
+            border-radius: 4px;
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-social-links {
+            margin: 1.5rem 0 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .footer-social-links a {
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .footer-social-links a:hover { color: var(--accent); }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .hero-logo { animation: none; }
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem 5%; }
+            .studio-link img { height: 38px; }
+            .studio-link span { display: none; }
+            nav { display: none; }
+            section { padding: 5rem 5%; }
+            .hero { padding-top: 7rem; }
+            .dossier { padding: 2rem 1.5rem 2.75rem; }
+            .dossier-head { flex-direction: column; gap: 0.25rem; }
+            .gallery, .grid, .cast { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="../" class="studio-link">
+            <img src="../redtape-logo.png" alt="Red Tape Studios">
+            <span lang="es">Volver al estudio</span><span lang="en">Back to the studio</span>
+        </a>
+        <div class="header-actions">
+            <nav>
+                <a href="#premisa"><span lang="es">El juego</span><span lang="en">The game</span></a>
+                <a href="#capturas"><span lang="es">Capturas</span><span lang="en">Screenshots</span></a>
+                <a href="#reparto"><span lang="es">Reparto</span><span lang="en">Cast</span></a>
+            </nav>
+            <div class="lang-toggle" role="group" aria-label="Idioma / Language">
+                <button type="button" data-set-lang="es" aria-pressed="true">ES</button>
+                <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Portada -->
+        <section class="hero">
+            <img src="img/logo.webp" alt="Sale a Devolver" class="hero-logo" width="1200" height="896">
+            <p class="hero-tagline">
+                <span lang="es">Cumple la ley… <em>o no.</em></span>
+                <span lang="en">Follow the law… <em>or don't.</em></span>
+            </p>
+            <p class="section-desc">
+                <span lang="es">Un simulador de gestoría con humor negro. Tramita declaraciones de la Renta, decide entre la legalidad y el fraude, come algo de la máquina y sobrevive a la sospecha de Hacienda. Un día más.</span>
+                <span lang="en">A darkly comic tax-office simulator. Process returns, choose between the rulebook and fraud, grab something from the vending machine and survive the taxman's suspicion. One more day.</span>
+            </p>
+            <div class="cta-row">
+                <a href="#premisa" class="btn"><span lang="es">Abrir el expediente</span><span lang="en">Open the case file</span></a>
+                <a href="mailto:contact@redtapestudio.dev?subject=Sale%20a%20Devolver" class="btn btn-ghost"><span lang="es">Prensa y contacto</span><span lang="en">Press &amp; contact</span></a>
+            </div>
+            <div class="hero-meta">
+                <div class="meta-item">
+                    <span class="meta-label"><span lang="es">Lanzamiento</span><span lang="en">Release</span></span>
+                    <span class="meta-val"><span lang="es">Próximamente en Steam</span><span lang="en">Coming soon to Steam</span></span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label"><span lang="es">Plataforma</span><span lang="en">Platform</span></span>
+                    <span class="meta-val">PC (Windows)</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label"><span lang="es">Idioma del juego</span><span lang="en">Game language</span></span>
+                    <span class="meta-val"><span lang="es">Español</span><span lang="en">Spanish</span></span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label"><span lang="es">Estudio</span><span lang="en">Studio</span></span>
+                    <span class="meta-val">Red Tape Studios · Valencia</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Premisa -->
+        <section id="premisa" class="reveal">
+            <div class="badge"><span lang="es">Expediente nº 1</span><span lang="en">Case file no. 1</span></div>
+            <h2 class="section-title"><span lang="es">Tu madre te echó de casa.<br>Tu primo te consiguió esto.</span><span lang="en">Your mum kicked you out.<br>Your cousin got you this.</span></h2>
+            <div class="dossier">
+                <div class="dossier-head">
+                    <span lang="es">Gestoría Pelayo &amp; Asociados</span><span lang="en">Pelayo &amp; Associates Tax Advisors</span>
+                    <span lang="es">(los asociados no existen)</span><span lang="en">(the associates don't exist)</span>
+                </div>
+                <p lang="es">Tienes 31 años, cuatro mil horas en un juego de gestión de fútbol y siete años «preparando unas oposiciones» que nadie sabe a qué son. Un día tu madre dice basta, y la cadena del enchufe hace el resto: tu primo, su amigo el Rubio, el hermano de este y, al final, Don Anselmo Pelayo.</p>
+                <p lang="en">You're 31, with four thousand hours in a football management game and seven years "studying for the civil service exam" (nobody knows which one). One day your mum has had enough, and a chain of favours does the rest: your cousin, his mate, his mate's brother and, finally, Don Anselmo Pelayo.</p>
+                <p lang="es">Ahora eres gestor fiscal. De 08:00 a 20:00 rellenas declaraciones en un PC que ha visto días mejores, mientras el BOE cambia las normas cada mañana, los clientes proponen «cositas» y un inspector muy cansado empieza a hacer preguntas.</p>
+                <p lang="en">Now you're a tax advisor. From 08:00 to 20:00 you fill in returns on a PC that has seen better days, while the official gazette changes the rules every morning, clients suggest "little favours" and a very tired inspector starts asking questions.</p>
+                <span class="stamp"><span lang="es">Sale a devolver</span><span lang="en">Refund due</span></span>
+            </div>
+        </section>
+
+        <!-- Cómo se juega -->
+        <section class="reveal">
+            <h2 class="section-title"><span lang="es">Cómo se juega</span><span lang="en">How it plays</span></h2>
+            <p class="section-desc"><span lang="es">Cada decisión cabe en una casilla. Y cada casilla, tarde o temprano, la mira alguien.</span><span lang="en">Every decision fits in a form field. And sooner or later, someone looks at every field.</span></p>
+            <div class="grid">
+                <div class="card">
+                    <span class="card-num">01 · RentaWeb</span>
+                    <h3><span lang="es">Copia el dossier. Bien.</span><span lang="en">Copy the dossier. Correctly.</span></h3>
+                    <p lang="es">Abres la carpeta, lees lo que cuenta el cliente y lo pasas a las casillas del formulario. La normativa del día cambia las reglas: un error honesto no es un fraude, pero Hacienda los cuenta igual.</p>
+                    <p lang="en">Open the folder, read the client's story and copy it into the form. Today's regulations change the rules: an honest mistake isn't fraud, but the taxman counts both.</p>
+                </div>
+                <div class="card">
+                    <span class="card-num">02 · HaciendAI</span>
+                    <h3><span lang="es">La IA que nunca se equivoca</span><span lang="en">The AI that is never wrong</span></h3>
+                    <p lang="es">Rápida, segura de sí misma y cómoda. También alucina alguna casilla y no lo admite hasta que ya has enviado la declaración. Usarla o no es asunto tuyo.</p>
+                    <p lang="en">Fast, confident and convenient. It also hallucinates the odd field and won't admit it until you've already submitted. Whether you use it is up to you.</p>
+                </div>
+                <div class="card">
+                    <span class="card-num">03 · <span lang="es">Libreta B</span><span lang="en">Notebook B</span></span>
+                    <h3><span lang="es">Encargos que no se apuntan</span><span lang="en">Jobs nobody writes down</span></h3>
+                    <p lang="es">Clientes y fondos de inversión con ideas creativas te escriben o te llaman. Inflar una deducción, perder una carpeta en la trituradora… El dinero B paga bien. La sospecha, también.</p>
+                    <p lang="en">Clients and investment funds with creative ideas email or phone you. Inflate a deduction, lose a folder in the shredder… Undeclared cash pays well. So does suspicion.</p>
+                </div>
+                <div class="card">
+                    <span class="card-num">04 · <span lang="es">Supervivencia</span><span lang="en">Survival</span></span>
+                    <h3><span lang="es">Hambre, energía y estrés</span><span lang="en">Hunger, energy and stress</span></h3>
+                    <p lang="es">Café de la máquina, bocadillos de dudosa fecha, una escapada al baño. Si te desmayas sobre el teclado, la cuota no se rellena sola.</p>
+                    <p lang="en">Vending-machine coffee, sandwiches of questionable date, a quick trip to the loo. If you pass out on the keyboard, the quota won't fill itself.</p>
+                </div>
+                <div class="card">
+                    <span class="card-num">05 · <span lang="es">La oficina</span><span lang="en">The office</span></span>
+                    <h3><span lang="es">Un día nunca es solo papeleo</span><span lang="en">A day is never just paperwork</span></h3>
+                    <p lang="es">Suena el teléfono, llama alguien a la puerta, la impresora se atasca y Don Anselmo quiere que alguien friegue el baño. Todo en primera persona y con el reloj corriendo.</p>
+                    <p lang="en">The phone rings, someone knocks at the door, the printer jams and Don Anselmo wants someone to mop the bathroom. All in first person, with the clock ticking.</p>
+                </div>
+                <div class="card">
+                    <span class="card-num">06 · <span lang="es">Inspección</span><span lang="en">Audit</span></span>
+                    <h3><span lang="es">Hacienda somos todos</span><span lang="en">We are all the taxman</span></h3>
+                    <p lang="es">Cada fraude y cada error suben la sospecha. Llega a cierto nivel y el inspector se sienta en tu despacho a repasar carpetas. Lo que dijiste, lo que firmaste y lo que trituraste.</p>
+                    <p lang="en">Every fraud and every mistake raises suspicion. Push it far enough and the inspector sits down in your office to go through your folders. What you said, what you signed and what you shredded.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Capturas -->
+        <section id="capturas" class="reveal">
+            <h2 class="section-title"><span lang="es">Capturas</span><span lang="en">Screenshots</span></h2>
+            <p class="section-desc"><span lang="es">Imágenes del juego en desarrollo. Pueden cambiar, como la normativa.</span><span lang="en">In-development footage. Subject to change, like the tax code.</span></p>
+            <div class="gallery">
+                <figure class="wide">
+                    <button type="button"><img src="img/menu.webp" alt="Menú principal de Sale a Devolver en la gestoría" loading="lazy" width="1600" height="863"></button>
+                    <figcaption><span lang="es">Gestoría Pelayo &amp; Asociados. Ministerio de Hacienda y Sufrimiento Público.</span><span lang="en">Pelayo &amp; Associates. Ministry of Finance and Public Suffering.</span></figcaption>
+                </figure>
+                <figure>
+                    <button type="button"><img src="img/ascensor.webp" alt="Llegada en ascensor al pasillo de la oficina" loading="lazy" width="1280" height="720"></button>
+                    <figcaption><span lang="es">08:03. Cada mañana empieza en el ascensor.</span><span lang="en">08:03. Every morning starts in the lift.</span></figcaption>
+                </figure>
+                <figure>
+                    <button type="button"><img src="img/escritorio.webp" alt="Escritorio del PC con RentaWeb, BandejaMail y el periódico" loading="lazy" width="1280" height="720"></button>
+                    <figcaption><span lang="es">RentaWeb 3.0, BandejaMail y «El Contribuyente», con el BOE de mañana.</span><span lang="en">RentaWeb 3.0, BandejaMail and "The Taxpayer", with tomorrow's gazette.</span></figcaption>
+                </figure>
+                <figure class="wide">
+                    <button type="button"><img src="img/libreta.webp" alt="La Libreta B de encargos en el PC" loading="lazy" width="1565" height="725"></button>
+                    <figcaption><span lang="es">La Libreta B. No dejar a la vista.</span><span lang="en">Notebook B. Keep out of sight.</span></figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- Reparto -->
+        <section id="reparto" class="reveal">
+            <h2 class="section-title"><span lang="es">El reparto</span><span lang="en">The cast</span></h2>
+            <p class="section-desc"><span lang="es">Nadie es inocente. Ni siquiera tú.</span><span lang="en">Nobody is innocent. Not even you.</span></p>
+            <div class="cast">
+                <article class="person">
+                    <span class="person-role"><span lang="es">El jefe</span><span lang="en">The boss</span></span>
+                    <h3>Don Anselmo Pelayo</h3>
+                    <p lang="es">Gestor de la vieja escuela. Ha visto catorce veces una película de brókeres de los noventa y decoró el despacho a juego: cuero, caoba y pantallas de bolsa que no mira nadie.</p>
+                    <p lang="en">Old-school tax advisor. He has watched a nineties stockbroker film fourteen times and decorated his office to match: leather, mahogany and stock tickers nobody reads.</p>
+                    <blockquote><span lang="es">Cumple años tres veces al año. Trae churros. Habla de «sinergias».</span><span lang="en">Has three birthdays a year. Brings churros. Talks about "synergies".</span></blockquote>
+                </article>
+                <article class="person">
+                    <span class="person-role"><span lang="es">Contabilidad</span><span lang="en">Accounts</span></span>
+                    <h3>Puri</h3>
+                    <p lang="es">Gafas, permanente de peluquería de barrio y rebeca. Estudió marketing; su única campaña fue el logo de la gestoría. Once gatos con nombres de santo.</p>
+                    <p lang="en">Glasses, a neighbourhood perm and a cardigan. She studied marketing; her only campaign was the firm's logo. Eleven cats named after saints.</p>
+                    <blockquote><span lang="es">Sabe dónde está cada euro y cada cotilleo.</span><span lang="en">Knows where every euro and every rumour is.</span></blockquote>
+                </article>
+                <article class="person">
+                    <span class="person-role"><span lang="es">Gestor sénior</span><span lang="en">Senior advisor</span></span>
+                    <h3>Borja Mari Sáenz de Tejada</h3>
+                    <p lang="es">Ama el sello, el formulario y el modelo 100. Tiene la portada del BOE enmarcada y es tu rival en el tablón de «Empleado del mes».</p>
+                    <p lang="en">Loves rubber stamps, forms and tax form 100. Has the official gazette's front page framed, and is your rival for "Employee of the Month".</p>
+                    <blockquote><span lang="es">Cree en el sistema porque «con los otros sería peor».</span><span lang="en">Believes in the system because "with the others it'd be worse".</span></blockquote>
+                </article>
+                <article class="person">
+                    <span class="person-role"><span lang="es">Informática</span><span lang="en">IT</span></span>
+                    <h3>Rafa</h3>
+                    <p lang="es">Ingeniero con máster que ha acabado apagando y encendiendo cosas. Su servidor se llama Gerardo.</p>
+                    <p lang="en">An engineer with a master's degree who ended up turning things off and on again. His server is called Gerardo.</p>
+                    <blockquote><span lang="es">«No es reiniciar. Es diagnóstico.»</span><span lang="en">"It's not rebooting. It's diagnostics."</span></blockquote>
+                </article>
+                <article class="person">
+                    <span class="person-role"><span lang="es">Hacienda</span><span lang="en">The taxman</span></span>
+                    <h3><span lang="es">El inspector Garrido</span><span lang="en">Inspector Garrido</span></h3>
+                    <p lang="es">Corrupto, cansado y de baja por estrés cuando le conviene. Sube en el ascensor sin avisar y se sienta en el sillón de las visitas.</p>
+                    <p lang="en">Corrupt, tired and off sick with stress whenever it suits him. Comes up in the lift unannounced and takes the visitor's chair.</p>
+                    <blockquote><span lang="es">Cuando llama a la puerta, nadie dice quién es.</span><span lang="en">When he knocks, nobody says who it is.</span></blockquote>
+                </article>
+                <article class="person">
+                    <span class="person-role"><span lang="es">El anterior</span><span lang="en">Your predecessor</span></span>
+                    <h3>Mateo</h3>
+                    <p lang="es">El gestor que ocupaba tu mesa. «Se fue a Andorra» de un día para otro. Dejó notas por la oficina.</p>
+                    <p lang="en">The advisor who had your desk before you. "Moved to Andorra" overnight. Left notes around the office.</p>
+                    <blockquote><span lang="es">Léelas. O no.</span><span lang="en">Read them. Or don't.</span></blockquote>
+                </article>
+            </div>
+        </section>
+
+        <!-- Un día -->
+        <section class="reveal">
+            <h2 class="section-title"><span lang="es">Un día cualquiera</span><span lang="en">Just another day</span></h2>
+            <ol class="timeline">
+                <li>
+                    <time>08:00</time><strong><span lang="es">Ascensor, despacho y bandeja.</span><span lang="en">Lift, office, inbox.</span></strong>
+                    <p lang="es">Llega la primera tanda de carpetas y el periódico con la normativa del día.</p>
+                    <p lang="en">The first batch of folders arrives, along with the paper and today's regulations.</p>
+                </li>
+                <li>
+                    <time>11:20</time><strong><span lang="es">Suena el teléfono.</span><span lang="en">The phone rings.</span></strong>
+                    <p lang="es">Un cliente pesado, tu madre o alguien con una propuesta que mejor no leer en voz alta.</p>
+                    <p lang="en">An annoying client, your mum, or someone with a proposal best not read aloud.</p>
+                </li>
+                <li>
+                    <time>14:00</time><strong><span lang="es">La máquina de la cafetería.</span><span lang="en">The vending machine.</span></strong>
+                    <p lang="es">Monedas, espiral, bocadillo. El hambre no entiende de plazos.</p>
+                    <p lang="en">Coins, spiral, sandwich. Hunger doesn't care about deadlines.</p>
+                </li>
+                <li>
+                    <time>16:45</time><strong><span lang="es">Llaman a la puerta.</span><span lang="en">Someone knocks.</span></strong>
+                    <p lang="es">Puede ser Don Anselmo con una tarea. Puede ser otra persona.</p>
+                    <p lang="en">It could be Don Anselmo with a chore. It could be someone else.</p>
+                </li>
+                <li>
+                    <time>19:00</time><strong><span lang="es">Se puede fichar.</span><span lang="en">Time to clock out.</span></strong>
+                    <p lang="es">Resumen del día, dinero legal, dinero B y los motivos de la sospecha. Y a casa, a pagar facturas y dormir.</p>
+                    <p lang="en">Daily summary, legal money, undeclared money and why suspicion went up. Then home, to pay bills and sleep.</p>
+                </li>
+            </ol>
+        </section>
+
+        <!-- Contacto -->
+        <section class="reveal">
+            <h2 class="section-title"><span lang="es">¿Quieres jugarlo?</span><span lang="en">Want to play it?</span></h2>
+            <p class="section-desc"><span lang="es">Sale a Devolver llegará a Steam con una demo gratuita. Para prensa, creadores o pruebas, escríbenos.</span><span lang="en">Sale a Devolver is coming to Steam with a free demo. Press, creators or playtesting: drop us a line.</span></p>
+            <div class="cta-row">
+                <a href="mailto:contact@redtapestudio.dev?subject=Sale%20a%20Devolver" class="btn">contact@redtapestudio.dev</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="disclaimer">
+            <p lang="es"><strong>Aviso:</strong> Sale a Devolver es una obra de ficción y parodia con humor negro. Las personas, empresas, marcas, organismos y normas que aparecen son inventados; cualquier parecido con la realidad es pura coincidencia. Las apuestas y el alcohol del juego son simulados y no implican dinero real.</p>
+            <p lang="en"><strong>Notice:</strong> Sale a Devolver is a work of fiction and dark-comedy parody. All people, companies, brands, agencies and regulations are made up; any resemblance to reality is purely coincidental. Gambling and alcohol in the game are simulated and involve no real money.</p>
+        </div>
+        <div class="footer-social-links">
+            <a href="https://www.linkedin.com/company/146707776" target="_blank" rel="noopener noreferrer" title="Red Tape Studios LinkedIn">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="https://x.com/redtapesudio" target="_blank" rel="noopener noreferrer" title="Red Tape Studios X/Twitter">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/studioredtape" target="_blank" rel="noopener noreferrer" title="Red Tape Studios Instagram">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+        </div>
+        <p>&copy; 2026 <a href="../">Red Tape Studios</a>. <span lang="es">Hecho en Valencia, España.</span><span lang="en">Based in Valencia, Spain.</span></p>
+    </footer>
+
+    <div class="lightbox" role="dialog" aria-modal="true" aria-label="Captura ampliada">
+        <img src="" alt="">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ── Idioma: guardado, o el del navegador ──
+            const root = document.documentElement;
+            const buttons = document.querySelectorAll('[data-set-lang]');
+            const setLang = (lang) => {
+                root.dataset.lang = lang;
+                root.lang = lang;
+                buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setLang === lang)));
+                try { localStorage.setItem('sad-lang', lang); } catch (e) {}
+            };
+            let saved = null;
+            try { saved = localStorage.getItem('sad-lang'); } catch (e) {}
+            const browserLang = (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en';
+            setLang(saved === 'es' || saved === 'en' ? saved : browserLang);
+            buttons.forEach(b => b.addEventListener('click', () => setLang(b.dataset.setLang)));
+
+            // ── Aparición al hacer scroll ──
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.12 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // ── Capturas ampliadas ──
+            const lightbox = document.querySelector('.lightbox');
+            const lightboxImg = lightbox.querySelector('img');
+            document.querySelectorAll('.gallery button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const img = btn.querySelector('img');
+                    lightboxImg.src = img.src;
+                    lightboxImg.alt = img.alt;
+                    lightbox.classList.add('open');
+                });
+            });
+            const closeLightbox = () => lightbox.classList.remove('open');
+            lightbox.addEventListener('click', closeLightbox);
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+        });
+    </script>
+</body>
+</html>
