@@ -1,0 +1,18 @@
+<footer class="site-footer">
+    {%- if page.footer_note %}
+    <div class="footer-note">
+        {% include notes/{{ page.footer_note }}.html %}
+    </div>
+    {%- endif %}
+    <div class="footer-social">
+        {%- for profile in site.data.social %}
+        <a href="{{ profile.url }}" target="_blank" rel="noopener noreferrer" title="Red Tape Studios · {{ profile.name }}" aria-label="Red Tape Studios · {{ profile.name }}">
+            {% include icons/{{ profile.icon }}.svg %}
+        </a>
+        {%- endfor %}
+    </div>
+    <p>&copy; {{ 'now' | date: '%Y' }} Red Tape Studios. <span lang="es">Hecho en Valencia, España.</span><span lang="en">Based in Valencia, Spain.</span></p>
+    <p class="footer-links">
+        <a href="mailto:info@redtapestudio.dev">info@redtapestudio.dev</a>
+    </p>
+</footer>

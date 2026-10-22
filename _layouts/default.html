@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{%- comment -%}
+  Base layout for every page. Front matter:
+    title_es / title_en   tab title per language (title_es is the default)
+    description           meta + social description
+    og_image              social preview image (site-relative path)
+    styles                extra stylesheets for this page (site-relative paths)
+    footer_note           include from _includes/notes/ shown above the footer
+{%- endcomment -%}
+<html lang="es" data-lang="es" data-title-es="{{ page.title_es | escape }}" data-title-en="{{ page.title_en | default: page.title_es | escape }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title_es }}</title>
+    <meta name="description" content="{{ page.description | escape }}">
+    <link rel="icon" type="image/png" href="{{ '/assets/img/favicon.png' | relative_url }}">
+    <link rel="apple-touch-icon" href="{{ '/assets/img/apple-touch-icon.png' | relative_url }}">
+    <link rel="canonical" href="{{ page.url | absolute_url }}">
+
+    <meta property="og:title" content="{{ page.title_es | escape }}">
+    <meta property="og:description" content="{{ page.description | escape }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ page.url | absolute_url }}">
+    <meta property="og:image" content="{{ page.og_image | default: '/assets/img/redtape-logo.webp' | absolute_url }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+    {%- for style in page.styles %}
+    <link rel="stylesheet" href="{{ style | relative_url }}">
+    {%- endfor %}
+    <script src="{{ '/assets/js/site.js' | relative_url }}"></script>
+    {%- for script in page.scripts %}
+    <script src="{{ script | relative_url }}" defer></script>
+    {%- endfor %}
+</head>
+<body>
+    <a class="skip-link" href="#main"><span lang="es">Saltar al contenido</span><span lang="en">Skip to content</span></a>
+    {% include header.html %}
+
+    <main id="main">
+{{ content }}
+    </main>
+
+    {% include footer.html %}
+</body>
+</html>

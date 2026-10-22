@@ -1,0 +1,11 @@
+# Red Tape Studios · redtapestudio.dev
+# GitHub Pages builds this site with Jekyll: shared head, header and footer live
+# in _layouts/ and _includes/, menus and social links in _data/.
+title: Red Tape Studios
+url: https://redtapestudio.dev
+baseurl: ""
+exclude:
+  - README.md
+  - vendor
+  - Gemfile
+  - Gemfile.lock
